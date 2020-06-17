@@ -180,7 +180,7 @@ class SSAH(object):
             results['mapt2t'] = []
 
             if epoch % 1 == 0:
-                print '++++++++Start train lab_net++++++++'
+                print('++++++++Start train lab_net++++++++')
                 for idx in range(2):
                     lr_lab_Up = var['lr_lab'][epoch:]
                     lr_lab = lr_lab_Up[idx]
@@ -190,15 +190,15 @@ class SSAH(object):
                         var['B'] = np.sign(var['H'])
                         train_labNet_loss = self.calc_labnet_loss(var['H'], var['LABEL_L'], var['feat_L'], Sim)
                         results['loss_labNet'].append(train_labNet_loss)
-                        print '---------------------------------------------------------------'
-                        print '...epoch: %3d, loss_labNet: %3.3f' % (epoch, train_labNet_loss)
-                        print '---------------------------------------------------------------'
+                        print('---------------------------------------------------------------')
+                        print('...epoch: %3d, loss_labNet: %3.3f' % (epoch, train_labNet_loss))
+                        print('---------------------------------------------------------------')
                         if train_labNet_k > 1 and (results['loss_labNet'][-1] - results['loss_labNet'][-2]) >= 0:
                             break
 
                 # Train domain discriminator
             if epoch % 1 == 0:
-                print '++++++++Start train dis_net++++++++'
+                print('++++++++Start train dis_net++++++++')
                 for idx in range(2):
                     lr_dis_Up = var['lr_dis'][epoch:]
                     lr_dis = lr_dis_Up[idx]
@@ -206,13 +206,13 @@ class SSAH(object):
                         IsFrom_, IsFrom, Loss_D = self.train_dis_net(lr_dis)
                         erro, acc = self.calc_isfrom_acc(IsFrom_, IsFrom)
                         results['Loss_D'].append(Loss_D)
-                        print '----------------------------------------'
-                        print '..epoch:{0}, Loss_D:{1}, acc:{2}'.format(epoch, Loss_D, acc)
-                        print '----------------------------------------'
+                        print('----------------------------------------')
+                        print('..epoch:{0}, Loss_D:{1}, acc:{2}'.format(epoch, Loss_D, acc))
+                        print('----------------------------------------')
                         if train_disNet_k > 1 and (results['Loss_D'][-1] - results['Loss_D'][-2]) <= 0:
                             break
 
-            print '++++++++Starting Train img_net++++++++'
+            print('++++++++Starting Train img_net++++++++')
             for idx in range(3):
                 lr_img_Up = var['lr_img'][epoch:]
                 lr_img = lr_img_Up[idx]
@@ -224,13 +224,13 @@ class SSAH(object):
                         train_imgNet_loss = self.calc_loss(B_i, var['F'], var['H'], var['H'], Sim, var['LABEL_I'],
                                                            train_L, alpha, beta, gamma, eta)
                         results['loss_imgNet'].append(train_imgNet_loss)
-                        print '---------------------------------------------------------------'
-                        print '...epoch: %3d, loss_imgNet: %3.3f' % (epoch, train_imgNet_loss)
-                        print '---------------------------------------------------------------'
+                        print('---------------------------------------------------------------')
+                        print('...epoch: %3d, loss_imgNet: %3.3f' % (epoch, train_imgNet_loss))
+                        print('---------------------------------------------------------------')
                     if train_imgNet_k > 2 and (results['loss_imgNet'][-1] - results['loss_imgNet'][-2]) >= 0:
                         break
 
-            print '++++++++Starting Train txt_net++++++++'
+            print('++++++++Starting Train txt_net++++++++')
             for idx in range(3):
                 lr_txt_Up = var['lr_txt'][epoch:]
                 lr_txt = lr_txt_Up[idx]
@@ -240,15 +240,15 @@ class SSAH(object):
                     if train_txtNet_k % 2 == 0:
                         train_txtNet_loss = self.calc_loss(B_t, var['H'], var['G'], var['H'], Sim, var['LABEL_T'], train_L, alpha, beta, gamma, eta)
                         results['loss_txtNet'].append(train_txtNet_loss)
-                        print '---------------------------------------------------------------'
-                        print '...epoch: %3d, Loss_txtNet: %s' % (epoch, train_txtNet_loss)
-                        print '---------------------------------------------------------------'
+                        print('---------------------------------------------------------------')
+                        print('...epoch: %3d, Loss_txtNet: %s' % (epoch, train_txtNet_loss))
+                        print('---------------------------------------------------------------')
                     if train_txtNet_k > 2 and (results['loss_txtNet'][-1] - results['loss_txtNet'][-2]) >= 0:
                         break
 
             var['B'] = np.sign(var['H'] + var['G'] + var['F'])
 
-            print "********test************"
+            print("********test************")
             self.test(self.phase)
 
             if np.mod(epoch, save_freq) == 0:
@@ -256,9 +256,9 @@ class SSAH(object):
 
     def test(self, phase):
         test = {}
-        print '=========================================================='
-        print '  ====                 Test map in all              ===='
-        print '=========================================================='
+        print('==========================================================')
+        print('  ====                 Test map in all              ====')
+        print('==========================================================')
 
         if phase == 'test' and self.load(self.checkpoint_dir):
             print(" [*] Load SUCCESS")
@@ -273,10 +273,10 @@ class SSAH(object):
         test['mapt2i'] = calc_map(test['qBY'], test['rBX'], self.query_L, self.retrieval_L)
         test['mapi2i'] = calc_map(test['qBX'], test['rBX'], self.query_L, self.retrieval_L)
         test['mapt2t'] = calc_map(test['qBY'], test['rBY'], self.query_L, self.retrieval_L)
-        print '=================================================='
-        print '...test map: map(i->t): %3.3f, map(t->i): %3.3f' % (test['mapi2t'], test['mapt2i'])
-        print '...test map: map(t->t): %3.3f, map(i->i): %3.3f' % (test['mapt2t'], test['mapi2i'])
-        print '=================================================='
+        print('==================================================')
+        print('...test map: map(i->t): %3.3f, map(t->i): %3.3f' % (test['mapi2t'], test['mapt2i']))
+        print('...test map: map(t->t): %3.3f, map(i->i): %3.3f' % (test['mapt2t'], test['mapi2i']))
+        print('==================================================')
 
             # Save hash code
         datasetStr = DATA_DIR.split('/')[-1]
@@ -289,13 +289,13 @@ class SSAH(object):
                                       'retrieval_L': L['retrieval'], 'query_L': L['query']})
 
     def train_lab_net(self, var, lr_lab):
-        print 'update label_net'
+        print('update label_net')
         H = var['H']
         Feat_L = var['feat_L']
         LABEL_L = var['LABEL_L']
         batch_size = var['batch_size']
         num_train = self.train_L.shape[0]
-        for iter in tqdm(xrange(num_train / batch_size)):
+        for iter in tqdm(range(num_train / batch_size)):
             index = np.random.permutation(num_train)
             ind = index[0: batch_size]
             sample_L = self.train_L[ind, :]
@@ -321,8 +321,8 @@ class SSAH(object):
         return H, LABEL_L, Feat_L
 
     def train_dis_net(self, lr):
-        print 'update dis_net'
-        for iter in xrange(num_train / batch_size):
+        print('update dis_net')
+        for iter in range(num_train / batch_size):
             index = np.random.permutation(num_train)
             ind = index[0: batch_size]
             image = self.train_X[ind].astype(np.float64)
@@ -358,19 +358,19 @@ class SSAH(object):
                                                    self.ph['lr_dis']: lr,
                                                    self.ph['keep_prob']: 1.0})
             if iter % 5 == 0:
-                print '...discriminator_Loss_D: {0}'.format(Loss_Dis)
+                print('...discriminator_Loss_D: {0}'.format(Loss_Dis))
         return np.hstack((isfrom_IL, isfrom_L1, isfrom_TL)), np.hstack((np.zeros_like(isfrom_IL), np.ones_like(isfrom_L1), np.zeros_like(isfrom_TL))), Loss_Dis
 
     
     def train_img_net(self, var, lr_img):
     
-        print 'update image_net'
+        print('update image_net')
         F = var['F']
         LABEL_I = var['LABEL_I']
         Feat_I = var['feat_I']
         batch_size = var['batch_size']
         num_train = self.train_X.shape[0]
-        for iter in tqdm(xrange(num_train / batch_size)):
+        for iter in tqdm(range(num_train / batch_size)):
             index = np.random.permutation(num_train)
             ind = index[0: batch_size]
             sample_L = train_L[ind, :]
@@ -405,14 +405,14 @@ class SSAH(object):
     
     def train_txt_net(self, var, lr_txt):
     
-        print 'update text_net'
+        print('update text_net')
     
         G = var['G']
         Feat_T = var['feat_T']
         LABEL_T = var['LABEL_T']
         batch_size = var['batch_size']
         num_train = self.train_Y.shape[0]
-        for iter in tqdm(xrange(num_train / batch_size)):
+        for iter in tqdm(range(num_train / batch_size)):
             index = np.random.permutation(num_train)
             ind = index[0: batch_size]
             sample_L = train_L[ind, :]
@@ -450,7 +450,7 @@ class SSAH(object):
             num_data = Modal.shape[0]
             index = np.linspace(0, num_data - 1, num_data).astype(int)
             B = np.zeros([num_data, bit], dtype=np.float32)
-            for iter in tqdm(xrange(num_data / batch_size + 1)):
+            for iter in tqdm(range(num_data / batch_size + 1)):
                 ind = index[iter * batch_size: min((iter + 1) * batch_size, num_data)]
                 label = Modal[ind, :].astype(np.float32)
                 label = label.reshape([label.shape[0], 1, label.shape[1], 1])
@@ -460,7 +460,7 @@ class SSAH(object):
             num_data = len(Modal)
             index = np.linspace(0, num_data - 1, num_data).astype(int)
             B = np.zeros([num_data, bit], dtype=np.float32)
-            for iter in tqdm(xrange(num_data / batch_size + 1)):
+            for iter in tqdm(range(num_data / batch_size + 1)):
                 ind = index[iter * batch_size: min((iter + 1) * batch_size, num_data)]
                 mean_pixel = np.repeat(self.meanpix[:, :, :, np.newaxis], len(ind), axis=3)
                 image = Modal[ind,:,:,:].astype(np.float64)
@@ -471,7 +471,7 @@ class SSAH(object):
             num_data = Modal.shape[0]
             index = np.linspace(0, num_data - 1, num_data).astype(int)
             B = np.zeros([num_data, bit], dtype=np.float32)
-            for iter in tqdm(xrange(num_data / batch_size + 1)):
+            for iter in tqdm(range(num_data / batch_size + 1)):
                 ind = index[iter * batch_size: min((iter + 1) * batch_size, num_data)]
                 text = Modal[ind, :].astype(np.float32)
                 text = text.reshape([text.shape[0], 1, text.shape[1], 1])
@@ -489,9 +489,9 @@ class SSAH(object):
         term3 = np.sum(np.log(1 + np.exp(theta_3)) - SIM * theta_3)
     
         loss = alpha * term1 + gamma * term2 + beta * term3# + gama4 * term4 + gama5 * term5
-        print 'label:',term1
-        print 'pairwise_hash:',term2
-        print 'pairwise_feat:',term3
+        print('label:',term1)
+        print('pairwise_hash:',term2)
+        print('pairwise_feat:',term3)
         return loss
     
     
@@ -504,10 +504,10 @@ class SSAH(object):
         term4 = np.sum(np.power((label_ - label), 2))
     
         loss = alpha * term1 + beta * term2 + gamma * term3 + eta * term4
-        print 'pairwise:', term1
-        print 'quantization:', term2
-        print 'hash_feature:', term3
-        print 'labe_predict:', term4
+        print('pairwise:', term1)
+        print('quantization:', term2)
+        print('hash_feature:', term3)
+        print('labe_predict:', term4)
         return loss
 
 

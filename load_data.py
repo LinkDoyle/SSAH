@@ -2,9 +2,9 @@ import h5py
 import numpy as np
 
 def loading_data(path):
-	print '******************************************************'
-	print 'dataset:{0}'.format(path)
-	print '******************************************************'
+	print('******************************************************')
+	print('dataset:{0}'.format(path))
+	print('******************************************************')
 
 	file = h5py.File(path)
 	images = file['images'][:].transpose(0,3,2,1)
