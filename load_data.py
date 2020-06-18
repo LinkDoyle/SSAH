@@ -6,7 +6,7 @@ def loading_data(path):
 	print('dataset:{0}'.format(path))
 	print('******************************************************')
 
-	file = h5py.File(path)
+	file = h5py.File(path, mode='r')
 	images = file['images'][:].transpose(0,3,2,1)
 	labels = file['LAll'][:].transpose(1,0)
 	tags = file['YAll'][:].transpose(1,0)

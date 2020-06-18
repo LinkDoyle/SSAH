@@ -13,22 +13,23 @@ def img_net(inputs, bit, numclass):
     labnet = {}
     current = tf.convert_to_tensor(inputs, dtype='float32')
     for i, name in enumerate(layers):
+        print('img layer', i)
         if name.startswith('conv'):
-            kernels, bias = weights[i][0][0][0][0]
+            kernels, bias = weights[i]['weights'][0][0][0]
 
             bias = bias.reshape(-1)
-            pad = weights[i][0][0][1]
-            stride = weights[i][0][0][4]
+            pad = weights[i]['pad'][0][0]
+            stride = weights[i]['stride'][0][0]
             current = conv_layer(current, kernels, bias, pad, stride, i, labnet)
         elif name.startswith('relu'):
             current = tf.nn.relu(current)
         elif name.startswith('pool'):
-            stride = weights[i][0][0][1]
-            pad = weights[i][0][0][2]
-            area = weights[i][0][0][5]
+            stride = weights[i]['stride'][0][0]
+            pad = weights[i]['pad'][0][0]
+            area = weights[i]['pool'][0][0]
             current = pool_layer(current, stride, pad, area)
         elif name.startswith('fc'):
-            kernels, bias = weights[i][0][0][0][0]
+            kernels, bias = weights[i]['weights'][0][0][0]
             bias = bias.reshape(-1)
             current = full_conv(current, kernels, bias, i, labnet)
         elif name.startswith('norm'):

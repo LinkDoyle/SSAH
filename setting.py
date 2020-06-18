@@ -53,7 +53,7 @@ dimText = train_y.shape[1]
 Sim = (np.dot(train_L, train_L.transpose()) > 0).astype(int)*0.999
 
 data = scipy.io.loadmat(MODEL_DIR)
-mean = data['normalization'][0][0][0]
+mean = data['meta']['normalization'][0][0][0]['averageImage'][0]
 
 Epoch = 500
 k_lab_net = 10
