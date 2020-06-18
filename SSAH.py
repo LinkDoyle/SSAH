@@ -184,7 +184,7 @@ class SSAH(object):
                 for idx in range(2):
                     lr_lab_Up = var['lr_lab'][epoch:]
                     lr_lab = lr_lab_Up[idx]
-                    for train_labNet_k in range(k_lab_net/(idx+1)):
+                    for train_labNet_k in range(k_lab_net//(idx + 1) + 1):
                         # Train lab_net
                         var['H'], var['LABEL_L'], var['feat_L'] = self.train_lab_net(var, lr_lab)
                         var['B'] = np.sign(var['H'])
@@ -216,7 +216,7 @@ class SSAH(object):
             for idx in range(3):
                 lr_img_Up = var['lr_img'][epoch:]
                 lr_img = lr_img_Up[idx]
-                for train_imgNet_k in range(k_img_net/(idx+1)):
+                for train_imgNet_k in range(k_img_net//(idx+1) + 1):
                     # Train img_net
                     var['F'], var['LABEL_I'], var['feat_I'] = self.train_img_net(var, lr_img)
                     B_i = np.sign(var['F'])
@@ -234,7 +234,7 @@ class SSAH(object):
             for idx in range(3):
                 lr_txt_Up = var['lr_txt'][epoch:]
                 lr_txt = lr_txt_Up[idx]
-                for train_txtNet_k in range(k_txt_net / (idx + 1)):
+                for train_txtNet_k in range(k_txt_net // (idx + 1) + 1):
                     var['G'], var['LABEL_T'], var['feat_T'] = self.train_txt_net(var, lr_txt)
                     B_t = np.sign(var['G'])
                     if train_txtNet_k % 2 == 0:
@@ -295,7 +295,7 @@ class SSAH(object):
         LABEL_L = var['LABEL_L']
         batch_size = var['batch_size']
         num_train = self.train_L.shape[0]
-        for iter in tqdm(range(num_train / batch_size)):
+        for iter in tqdm(range(num_train // batch_size + 1)):
             index = np.random.permutation(num_train)
             ind = index[0: batch_size]
             sample_L = self.train_L[ind, :]
@@ -322,7 +322,7 @@ class SSAH(object):
 
     def train_dis_net(self, lr):
         print('update dis_net')
-        for iter in range(num_train / batch_size):
+        for iter in range(num_train // batch_size + 1):
             index = np.random.permutation(num_train)
             ind = index[0: batch_size]
             image = self.train_X[ind].astype(np.float64)
@@ -370,7 +370,7 @@ class SSAH(object):
         Feat_I = var['feat_I']
         batch_size = var['batch_size']
         num_train = self.train_X.shape[0]
-        for iter in tqdm(range(num_train / batch_size)):
+        for iter in tqdm(range(num_train // batch_size + 1)):
             index = np.random.permutation(num_train)
             ind = index[0: batch_size]
             sample_L = train_L[ind, :]
@@ -412,7 +412,7 @@ class SSAH(object):
         LABEL_T = var['LABEL_T']
         batch_size = var['batch_size']
         num_train = self.train_Y.shape[0]
-        for iter in tqdm(range(num_train / batch_size)):
+        for iter in tqdm(range(num_train // batch_size + 1)):
             index = np.random.permutation(num_train)
             ind = index[0: batch_size]
             sample_L = train_L[ind, :]
@@ -450,7 +450,7 @@ class SSAH(object):
             num_data = Modal.shape[0]
             index = np.linspace(0, num_data - 1, num_data).astype(int)
             B = np.zeros([num_data, bit], dtype=np.float32)
-            for iter in tqdm(range(num_data / batch_size + 1)):
+            for iter in tqdm(range(num_data // batch_size + 1)):
                 ind = index[iter * batch_size: min((iter + 1) * batch_size, num_data)]
                 label = Modal[ind, :].astype(np.float32)
                 label = label.reshape([label.shape[0], 1, label.shape[1], 1])
@@ -460,7 +460,7 @@ class SSAH(object):
             num_data = len(Modal)
             index = np.linspace(0, num_data - 1, num_data).astype(int)
             B = np.zeros([num_data, bit], dtype=np.float32)
-            for iter in tqdm(range(num_data / batch_size + 1)):
+            for iter in tqdm(range(num_data // batch_size + 1)):
                 ind = index[iter * batch_size: min((iter + 1) * batch_size, num_data)]
                 mean_pixel = np.repeat(self.meanpix[:, :, :, np.newaxis], len(ind), axis=3)
                 image = Modal[ind,:,:,:].astype(np.float64)
@@ -471,7 +471,7 @@ class SSAH(object):
             num_data = Modal.shape[0]
             index = np.linspace(0, num_data - 1, num_data).astype(int)
             B = np.zeros([num_data, bit], dtype=np.float32)
-            for iter in tqdm(range(num_data / batch_size + 1)):
+            for iter in tqdm(range(num_data // batch_size + 1)):
                 ind = index[iter * batch_size: min((iter + 1) * batch_size, num_data)]
                 text = Modal[ind, :].astype(np.float32)
                 text = text.reshape([text.shape[0], 1, text.shape[1], 1])

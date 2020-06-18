@@ -11,7 +11,7 @@ def calc_map(qB, rB, query_L, retrieval_L):
 	# query_L: {0,1}^{mxl}
 	# retrieval_L: {0,1}^{nxl}
 	num_query = query_L.shape[0]
-	map = 0
+	mAP = 0
 	for iter in range(num_query):
 		gnd = (np.dot(query_L[iter, :], retrieval_L.transpose()) > 0).astype(np.float32)
 		tsum = np.sum(gnd)
@@ -23,9 +23,9 @@ def calc_map(qB, rB, query_L, retrieval_L):
 		count = np.linspace(1, tsum, tsum)
 
 		tindex = np.asarray(np.where(gnd == 1)) + 1.0
-		map = map + np.mean(count / (tindex))
-	map = map / num_query
-	return map
+		mAP = mAP + np.mean(count / (tindex))
+	mAP = mAP / num_query
+	return mAP
 
 
 if __name__=='__main__':
@@ -50,5 +50,5 @@ if __name__=='__main__':
 													[1, 0, 0, 0],
 													[0, 0, 1, 0]])
 
-	map = calc_map(qB, rB, query_L, retrieval_L)
-	print(map)
+	mAP = calc_map(qB, rB, query_L, retrieval_L)
+	print(mAP)
